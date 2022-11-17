@@ -1,3 +1,4 @@
+import { useEffect } from 'react';
 import closeIcon from '../../assets/images/close-icon.svg';
 import { Order } from '../../types/Order';
 import { formatCurrency } from '../../utils/formatCurrency';
@@ -20,6 +21,19 @@ export const OrderModal = ({ visible, order, onClose }: OrderModalProps) => {
 	const total = order.products.reduce((total, { product, quantity }) => {
 		return total + product.price * quantity;
 	}, 0);
+
+	useEffect(() => {
+		const handleKeyDown = (event: KeyboardEvent) => {
+			if (event.key === 'Escape') {
+				onClose();
+			}
+		};
+		document.addEventListener('keydown', handleKeyDown);
+
+		return () => {
+			document.removeEventListener('keydown', handleKeyDown);
+		};
+	}, [onClose]);
 
 	return (
 		<Overlay>
